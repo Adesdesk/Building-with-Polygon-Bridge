@@ -2,7 +2,7 @@ const { ethers } = require("hardhat");
 
 async function main() {
   // Contract and token ID details
-  const contractAddress = "CONTRACT_ADDRESS"; // Replace with the address of your AdesdeskNFTs contract
+  const contractAddress = "0x5B30a9CcE60FB6c8099c643e018Ed278ed9be6F7"; // address of AdesdeskNFTCollection contract
   const tokenIds = [ 1, 2, 3, 4, 5, ];
   const recipientAddress = "RECIPIENT_ADDRESS"; // Replace with the address where you want to receive the NFTs
 

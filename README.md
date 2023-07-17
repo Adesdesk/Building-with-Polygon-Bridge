@@ -11,3 +11,10 @@ Successfully verified contract AdesdeskNFTCollection on Etherscan.
 https://goerli.etherscan.io/address/0x5B30a9CcE60FB6c8099c643e018Ed278ed9be6F7#code
 Verified AdesdeskNFTCollection
 Batch minting completed!
+
+
+After Mapping
+Ethereum address
+0x5B30a9CcE60FB6c8099c643e018Ed278ed9be6F7
+Child Address
+0xD3F6575c03d8d023797aE525b47c654E36722130
