@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "erc721a/contracts/ERC721A.sol";
 
-contract AdesdeskNFTs is ERC721A {
+contract AdesdeskNFTCollection is ERC721A {
 
     uint256[] public tokenIds;
     string[] public tokenURIs;

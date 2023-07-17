@@ -3,7 +3,7 @@ const { ethers } = require("hardhat");
 async function main() {
   // Contract and token ID details
   const contractAddress = "CONTRACT_ADDRESS"; // Replace with the address of your AdesdeskNFTs contract
-  const tokenIds = [/* Array of token IDs to transfer */];
+  const tokenIds = [ 1, 2, 3, 4, 5, ];
   const recipientAddress = "RECIPIENT_ADDRESS"; // Replace with the address where you want to receive the NFTs
 
   // Get the contract instance and the signer
@@ -45,23 +45,3 @@ main().catch((error) => {
 
 
 
-
-// const AdesdeskNFTs = artifacts.require("AdesdeskNFTs");
-// const FxPortalBridge = artifacts.require("FxPortalBridge");
-
-// module.exports = async function (deployer) {
-//   const contract = await AdesdeskNFTs.deployed();
-//   const bridge = await FxPortalBridge.deployed();
-
-//   // Get the list of token IDs that were batch minted.
-//   const tokenIds = await contract.tokenIds();
-
-//   // Batch transfer the NFTs to Polygon Mumbai.
-//   for (let i = 0; i < tokenIds.length; i++) {
-//     await bridge.transferNFT(
-//       deployer.address,
-//       tokenIds[i],
-//       "0x0000000000000000000000000000000000000000"
-//     );
-//   }
-// };
