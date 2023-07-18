@@ -387,6 +387,11 @@
     "@ethersproject/properties" "^5.7.0"
     "@ethersproject/strings" "^5.7.0"
 
+"@fxportal/maticjs-fxportal@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@fxportal/maticjs-fxportal/-/maticjs-fxportal-1.1.1.tgz#aa05d7ee6614faa6c2ae1fd16f86c215f8578205"
+  integrity sha512-/n4Bkab2eW9rcgQSa478yd16NxvllYjGkpF9WNhPTSmrlpicXhdGouBZ/gjK/KcCiXpNRVAaZU/slQfp8diBGQ==
+
 "@jridgewell/resolve-uri@^3.0.3":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@jridgewell/resolve-uri/-/resolve-uri-3.1.1.tgz#c08679063f279615a3326583ba3a90d1d82cc721"

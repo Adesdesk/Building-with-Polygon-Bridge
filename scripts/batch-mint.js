@@ -1,8 +1,12 @@
 const { ethers } = require("hardhat");
+const contractInJSON = require("../artifacts/contracts/AdesdeskNFTCollection.sol/AdesdeskNFTCollection.json");
+require("dotenv").config();
 
 async function main() {
   // Set up the signer with your MetaMask private key
   const privateKey = process.env.PRIVATE_KEY;
+  const AdesdeskNFTCollectionABI = contractInJSON.abi;
+  const AdesdeskNFTCollectionAddress = '0x5B30a9CcE60FB6c8099c643e018Ed278ed9be6F7';
   if (!privateKey) {
     throw new Error("Private key not found in the .env file.");
   }
@@ -10,12 +14,10 @@ async function main() {
   // Get the wallet provider for the Goerli network
   const provider = new ethers.providers.JsonRpcProvider(process.env.GOERLI_URL);
   const signer = new ethers.Wallet(privateKey, provider);
+  AdesdeskNFTCollectionContract = new ethers.Contract(AdesdeskNFTCollectionAddress, AdesdeskNFTCollectionABI, signer);
 
-  // Contract and constructor arguments
-  const name = "Adesdesk NFTs";
-  const symbol = "ANFT";
-  const recipients = Array(5).fill(signer.address); // Create an array with 5 elements, all set to the signer's address
-  const tokenIds = [1, 2, 3, 4, 5];
+  const recipients = Array(5).fill(signer.address); // An array with 5 elements, all set to the signer's address
+  const tokenIds = [6, 7, 8, 9, 10];
   const tokenURIs = [
     "https://gateway.pinata.cloud/ipfs/QmTbwURfUmTv6dfhuTuZhwUgoedfj91RxCrcrxzLQf5bK9",
     "https://gateway.pinata.cloud/ipfs/QmaWFHMnhFEa47PGTXQoRjAxDJRahjhjUA7Mo5JewLH1e9",
@@ -31,34 +33,8 @@ async function main() {
     "A petroleum engineer supervising activities at an oil rig",
   ];
 
-  // Deploy the contract
-  const AdesdeskNFTCollection = await ethers.getContractFactory("AdesdeskNFTCollection");
-  const contract = await AdesdeskNFTCollection.connect(signer).deploy(name, symbol);
-  await contract.deployed();
-  console.log("Contract deployed to:", contract.address);
-  
-
-  // Verify the contract
-  console.log("Sleeping.....");
-  // Wait for block explorer to notice that the contract has been deployed
-  await sleep(80000);
-
-
-  // Verify the MyToken contract after deploying
-  await hre.run("verify:verify", {
-    contract: "contracts/AdesdeskNFTCollection.sol:AdesdeskNFTCollection",
-    address: contract.address,
-    constructorArguments: [name, symbol],
-  });
-  console.log("Verified AdesdeskNFTCollection ")
-
-  function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
-
   // Batch mint NFTs
-  await contract.batchMint(recipients, tokenIds, tokenURIs, descriptions);
+  await AdesdeskNFTCollectionContract.batchMint(recipients, tokenIds, tokenURIs, descriptions);
   console.log("Batch minting completed!");
 }
 
@@ -69,11 +45,3 @@ main()
     console.error(error);
     process.exit(1);
   });
-
-
-
-
-
-
-
-// npx hardhat run scripts/batch-mint.js --network goerli

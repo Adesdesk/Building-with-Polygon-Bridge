@@ -1,40 +1,60 @@
 const { ethers } = require("hardhat");
+const contractInJSON = require("../artifacts/contracts/AdesdeskNFTCollection.sol/AdesdeskNFTCollection.json");
+const { FxPortalBridgeABI } = require('../artifacts/FXRootContractAbi.js');
+require("dotenv").config();
 
 async function main() {
-  // Contract and token ID details
-  const contractAddress = "0x5B30a9CcE60FB6c8099c643e018Ed278ed9be6F7"; // address of AdesdeskNFTCollection contract
-  const tokenIds = [ 1, 2, 3, 4, 5, ];
-  const recipientAddress = "RECIPIENT_ADDRESS"; // Replace with the address where you want to receive the NFTs
-
-  // Get the contract instance and the signer
-  const contract = await ethers.getContractAt("AdesdeskNFTs", contractAddress);
-  const [deployer] = await ethers.getSigners();
-
-  // Step 1: Approve NFTs for transfer
-  for (const tokenId of tokenIds) {
-    await contract.connect(deployer).approve("FxPortal: RECEIVER_ADDRESS", tokenId);
-    console.log(`Token ID ${tokenId} approved for transfer`);
+  // Set up the signer with your MetaMask private key
+  const privateKey = process.env.PRIVATE_KEY;
+  const AdesdeskNFTCollectionABI = contractInJSON.abi;
+  const AdesdeskNFTCollectionAddress = '0x5B30a9CcE60FB6c8099c643e018Ed278ed9be6F7';
+  if (!privateKey) {
+    throw new Error("Private key not found in the .env file.");
   }
 
-  // Step 2: Deposit NFTs to the Bridge
-  await contract.batchTransferFrom(deployer.address, "FxPortal: RECEIVER_ADDRESS", tokenIds);
-  console.log("NFTs deposited to the FxPortal Bridge");
+  // Get the wallet provider for the Goerli network
+  const provider = new ethers.providers.JsonRpcProvider(process.env.GOERLI_URL);
+  const signer = new ethers.Wallet(privateKey, provider);
+  AdesdeskNFTCollectionContract = new ethers.Contract(AdesdeskNFTCollectionAddress, AdesdeskNFTCollectionABI, signer);
 
-  // Step 3: Test balanceOf on Mumbai
-  const mumbaiChainId = 80001; // Mumbai testnet chain ID
-  const mumbaiProvider = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.matic.today");
-  const mumbaiContract = await ethers.getContractAt("AdesdeskNFTs", "MUMBAI_CONTRACT_ADDRESS", mumbaiProvider);
+  // The address of the root tunnel on Polygon Mumbai
+  const rootTunnelAddress = "0x8421f4959241412d50037d7041b8525809f912dd";
 
+  // The address of the receiver on Polygon Mumbai
+  const receiverAddress = "0x1928062edfafbccb7d1c788b24f6acde80869048";
+
+  // The token IDs you want to transfer
+  const tokenIds = [1, 2, 3, 4, 5];
+
+  // Step 1: Approve the NFTs to be transferred
   for (const tokenId of tokenIds) {
-    const balance = await mumbaiContract.balanceOf(recipientAddress, tokenId);
-    console.log(`Recipient's balance of Token ID ${tokenId} on Mumbai: ${balance}`);
+    await AdesdeskNFTCollectionContract.approve(rootTunnelAddress, tokenId);
+    console.log(`Approved token ID ${tokenId} for transfer.`);
   }
+
+  // Step 2: Deposit the NFTs to the Bridge
+  //const FxPortalBridgeABI = require("fx-portal-contracts/build/contracts/FxPortalBridge.json").abi;
+  const FxPortalBridgeAddress = "'0xF9bc4a80464E48369303196645e876c8C7D972de"; // Replace with the actual FxPortal Bridge address on Goerli
+  const FxPortalBridgeContract = new ethers.Contract(FxPortalBridgeAddress, FxPortalBridgeABI, provider);
+
+  // Convert the token IDs to BigNumbers
+  const tokenIdsBigNumber = tokenIds.map(id => ethers.BigNumber.from(id));
+
+  // Deposit the NFTs
+  const depositTx = await FxPortalBridgeContract.deposit(AdesdeskNFTCollectionAddress, receiverAddress, tokenIdsBigNumber);
+  await depositTx.wait();
+  console.log("NFTs have been deposited to the FxPortal Bridge.");
+
+  console.log("Transfer process completed!");
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+// Execute the transfer script
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
 
 
 
@@ -42,6 +62,42 @@ main().catch((error) => {
 
 
 
+// const { ethers } = require("hardhat");
+// const contractInJSON = require("../artifacts/contracts/AdesdeskNFTCollection.sol/AdesdeskNFTCollection.json");
+// require("dotenv").config();
+
+// async function main() {
+//   // Set up the signer with your MetaMask private key
+//   const privateKey = process.env.PRIVATE_KEY;
+//   const AdesdeskNFTCollectionABI = contractInJSON.abi;
+//   const AdesdeskNFTCollectionAddress = '0x5B30a9CcE60FB6c8099c643e018Ed278ed9be6F7';
+//   if (!privateKey) {
+//     throw new Error("Private key not found in the .env file.");
+//   }
+
+//   // Get the wallet provider for the Goerli network
+//   const provider = new ethers.providers.JsonRpcProvider(process.env.GOERLI_URL);
+//   const signer = new ethers.Wallet(privateKey, provider);
+//   AdesdeskNFTCollectionContract = new ethers.Contract(AdesdeskNFTCollectionAddress, AdesdeskNFTCollectionABI, provider);;
 
 
 
+
+//   console.log("Transfers completed!");
+// }
+
+// // Execute the batch minting script
+// main()
+//   .then(() => process.exit(0))
+//   .catch((error) => {
+//     console.error(error);
+//     process.exit(1);
+//   });
+
+
+
+
+
+
+
+// npx hardhat run scripts/batch-transfer.js --network goerli

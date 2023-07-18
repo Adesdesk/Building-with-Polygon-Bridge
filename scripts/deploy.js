@@ -1,33 +1,46 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
-const hre = require("hardhat");
+const { ethers, upgrades } = require('hardhat');
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+  const [deployer] = await ethers.getSigners();
 
-  const lockedAmount = hre.ethers.parseEther("0.001");
+  console.log('Deploying contracts with the account:', deployer.address);
 
-  const lock = await hre.ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
+  // Setting contract name and symbol
+  const name = 'AdesdeskNFTCollection';
+  const symbol = 'ANFT';
+
+  // Deploy the AdesdeskNFTCollection contract
+  const AdesdeskNFTCollection = await ethers.getContractFactory('AdesdeskNFTCollection');
+  const contract = await upgrades.deployProxy(AdesdeskNFTCollection, [name, symbol]);
+
+  // Wait for complete contract deployment
+  await contract.deployed();
+
+  console.log('Contract deployed to:', contract.address);
+
+  // Verify the contract
+  console.log("Sleeping.....");
+  // Wait for block explorer to notice that the contract has been deployed
+  await sleep(80000);
+
+
+  // Verify the MyToken contract after deploying
+  await hre.run("verify:verify", {
+    contract: "contracts/AdesdeskNFTCollection.sol:AdesdeskNFTCollection",
+    address: contract.address,
+    constructorArguments: [name, symbol],
   });
+  console.log("Verified AdesdeskNFTCollection ")
 
-  await lock.waitForDeployment();
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
-  console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
-  );
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
