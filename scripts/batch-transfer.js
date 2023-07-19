@@ -1,9 +1,9 @@
 const { ethers } = require("hardhat");
 const contractInJSON = require("../artifacts/contracts/AdesdeskNFTCollection.sol/AdesdeskNFTCollection.json");
-const { FxPortalBridgeABI } = require('../artifacts/FXRootContractAbi.js');
+const { FxERC721RootTunnelABI } = require('../FxERC721RootTunnel.json');
 require("dotenv").config();
 
-async function main() {
+async function batchTransferNFTs() {
   // Set up the signer with your MetaMask private key
   const privateKey = process.env.PRIVATE_KEY;
   const AdesdeskNFTCollectionABI = contractInJSON.abi;
@@ -18,7 +18,7 @@ async function main() {
   AdesdeskNFTCollectionContract = new ethers.Contract(AdesdeskNFTCollectionAddress, AdesdeskNFTCollectionABI, signer);
 
   // The address of the root tunnel on Polygon Mumbai
-  const rootTunnelAddress = "0x8421f4959241412d50037d7041b8525809f912dd";
+  const rootTunnelAddress = "0xF9bc4a80464E48369303196645e876c8C7D972de";
 
   // The address of the receiver on Polygon Mumbai
   const receiverAddress = "0x1928062edfafbccb7d1c788b24f6acde80869048";
@@ -26,30 +26,29 @@ async function main() {
   // The token IDs you want to transfer
   const tokenIds = [1, 2, 3, 4, 5];
 
-  // Step 1: Approve the NFTs to be transferred
+  // 1: Approve the NFTs to be transferred
   for (const tokenId of tokenIds) {
     await AdesdeskNFTCollectionContract.approve(rootTunnelAddress, tokenId);
     console.log(`Approved token ID ${tokenId} for transfer.`);
   }
 
-  // Step 2: Deposit the NFTs to the Bridge
-  //const FxPortalBridgeABI = require("fx-portal-contracts/build/contracts/FxPortalBridge.json").abi;
-  const FxPortalBridgeAddress = "'0xF9bc4a80464E48369303196645e876c8C7D972de"; // Replace with the actual FxPortal Bridge address on Goerli
-  const FxPortalBridgeContract = new ethers.Contract(FxPortalBridgeAddress, FxPortalBridgeABI, provider);
+  // 2: Deposit the NFTs to the Bridge
+  const FxERC721RootTunnelContract = new ethers.Contract(rootTunnelAddress, FxERC721RootTunnelABI, provider);
 
-  // Convert the token IDs to BigNumbers
-  const tokenIdsBigNumber = tokenIds.map(id => ethers.BigNumber.from(id));
+  // Convert the token Ids to BigNumbers
+  myCustomMetadata = "0x42 0x79 0x20 0x41 0x64 0x65";
 
   // Deposit the NFTs
-  const depositTx = await FxPortalBridgeContract.deposit(AdesdeskNFTCollectionAddress, receiverAddress, tokenIdsBigNumber);
-  await depositTx.wait();
-  console.log("NFTs have been deposited to the FxPortal Bridge.");
-
-  console.log("Transfer process completed!");
+  for (const tokenId of tokenIds) {
+    const depositTx = await FxERC721RootTunnelContract.deposit(AdesdeskNFTCollectionAddress, receiverAddress, tokenIdsBigNumber, myCustomMetadata);
+    await depositTx.wait();
+    console.log("NFTs have been deposited to the FxPortal Bridge.");
+    console.log("Transfer from Goerli to Polygon Mumbai network completed!");
+  }
 }
 
 // Execute the transfer script
-main()
+batchTransferNFTs()
   .then(() => process.exit(0))
   .catch((error) => {
     console.error(error);
