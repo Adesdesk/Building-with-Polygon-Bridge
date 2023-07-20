@@ -6,7 +6,7 @@ async function testBalanceOf() {
   // Setting up the signer with MetaMask private key
   const privateKey = process.env.RECEICER_PRIVATE_KEY;
   const AdesdeskNFTCollectionABI = contractInJSON.abi;
-  const AdesdeskNFTCollectionAddress = "";
+  const AdesdeskNFTCollectionAddress = "0x8A85544b11ad7E6F274F13eEF4628EC2dDd313DB";
   if (!privateKey) {
     throw new Error("Private key not found in the .env file.");
   }

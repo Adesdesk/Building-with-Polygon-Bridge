@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
-const { FxERC721RootTunnelABI } = require('../FxERC721RootTunnel.json');
+const FxERC721RootTunnelABI = require('../FxERC721RootTunnel.json');
 
-async function batchTransfer() {
+async function batchTransferNFTs() {
   const [deployer] = await hre.ethers.getSigners();
 
   // The address of the root tunnel on Polygon Mumbai
@@ -10,7 +10,7 @@ async function batchTransfer() {
   const FxERC721RootTunnelContract = await ethers.getContractAt(FxERC721RootTunnelABI, rootTunnelAddress);
 
   // Get an instance of the AdesdeskNFTCollection contract
-  const AdesdeskNFTCollectionAddress = "";
+  const AdesdeskNFTCollectionAddress = "0x8A85544b11ad7E6F274F13eEF4628EC2dDd313DB";
   const AdesdeskNFTCollection = await ethers.getContractFactory("AdesdeskNFTCollection");
   const adesdeskNFTCollection = await AdesdeskNFTCollection.attach(AdesdeskNFTCollectionAddress);
 
@@ -29,7 +29,7 @@ async function batchTransfer() {
 
 
   // 2: Deposit the NFTs to the Bridge
-  myCustomMetadata = "0x42 0x79 0x20 0x41 0x64 0x65";
+  myCustomMetadata = "0x427920416465";
 
   // Deposit the NFTs
   for (const tokenId of tokenIds) {
@@ -47,3 +47,8 @@ batchTransferNFTs()
     console.error(error);
     process.exit(1);
   });
+
+
+
+
+// npx hardhat run scripts/batchTransfer.js --network goerli

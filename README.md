@@ -67,5 +67,7 @@ https://goerli.etherscan.io/address/0x8A85544b11ad7E6F274F13eEF4628EC2dDd313DB#c
 Verified AdesdeskNFTCollection
 
 ### After Mapping...
-Child Address:
+Child Address (Polygon Mumbai):
 0x57aa9696c5328024f6B718043e9C1F72571B9eD4
+
+FxPortal: 0x7Aee444cfaadE656CF1aAEd82D887cEB66DC5d2F
