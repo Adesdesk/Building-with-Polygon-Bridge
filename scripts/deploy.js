@@ -1,4 +1,5 @@
-const { ethers, upgrades } = require('hardhat');
+const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
 async function main() {
   const [deployer] = await ethers.getSigners();
@@ -8,15 +9,16 @@ async function main() {
   // Setting contract name and symbol
   const name = 'AdesdeskNFTCollection';
   const symbol = 'ANFT';
+  const contractArgs = [name, symbol];
 
   // Deploy the AdesdeskNFTCollection contract
   const AdesdeskNFTCollection = await ethers.getContractFactory('AdesdeskNFTCollection');
-  const contract = await upgrades.deployProxy(AdesdeskNFTCollection, [name, symbol]);
+  const contract = await AdesdeskNFTCollection.deploy(...contractArgs);
 
   // Wait for complete contract deployment
   await contract.deployed();
 
-  console.log('Contract deployed to:', contract.address);
+  console.log('AdesdeskNFTCollection Contract deployed to:', contract.address);
 
   // Verify the contract
   console.log("Sleeping.....");
@@ -44,3 +46,8 @@ main()
     console.error(error);
     process.exit(1);
   });
+
+
+
+
+// npx hardhat run scripts/deploy.js --network goerli

@@ -6,7 +6,7 @@ async function testBalanceOf() {
   // Setting up the signer with MetaMask private key
   const privateKey = process.env.RECEICER_PRIVATE_KEY;
   const AdesdeskNFTCollectionABI = contractInJSON.abi;
-  const AdesdeskNFTCollectionAddress = '0x5B30a9CcE60FB6c8099c643e018Ed278ed9be6F7';
+  const AdesdeskNFTCollectionAddress = "";
   if (!privateKey) {
     throw new Error("Private key not found in the .env file.");
   }
@@ -37,4 +37,4 @@ testBalanceOf()
   });
 
 
-// npx hardhat run scripts/batch-transfer.js --network mumbai
+// npx hardhat run scripts/testBalanceOf.js --network mumbai

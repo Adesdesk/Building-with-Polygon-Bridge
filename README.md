@@ -62,10 +62,10 @@ Email: adesdesk@outlook.com
 This project is licensed under the MIT License - see the LICENSE.md file for details
 
 ## Appendix
-Verified NFT contract address: 0x5B30a9CcE60FB6c8099c643e018Ed278ed9be6F7
-https://goerli.etherscan.io/address/0x5B30a9CcE60FB6c8099c643e018Ed278ed9be6F7#code
+Successfully verified contract AdesdeskNFTCollection on Etherscan.
+https://goerli.etherscan.io/address/0x8A85544b11ad7E6F274F13eEF4628EC2dDd313DB#code
 Verified AdesdeskNFTCollection
 
 ### After Mapping...
 Child Address:
-0xD3F6575c03d8d023797aE525b47c654E36722130
+0x57aa9696c5328024f6B718043e9C1F72571B9eD4
