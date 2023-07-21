@@ -43,7 +43,7 @@ npx hardhat run scripts/testBalanceOf.js --network mumbai
 
 * You need to have NodeJS installed to your computer in order to run this program locally.
 * Ensure to name your environment variables as used in the scripts or you would need to rename those in the scripts to match your own naming preference.
-* this project uses yarn to install its dependencies. If you prefer to use npm, it is recommended to use the following command.
+* This project uses yarn to install its dependencies. If you prefer to use npm, it is recommended to use the following command.
 
 ```
 npm ci
